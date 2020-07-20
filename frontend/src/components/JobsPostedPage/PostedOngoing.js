@@ -8,6 +8,7 @@ import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.m
 import axios from 'axios'
 import { useAuth0 } from '../../react-auth0-spa'
 import config from '../../auth_config.json'
+import ViewFeedbackUserLink from "../ViewFeedbackUserPage/ViewFeedbackUserLink"
 
 const { apiOrigin = "http://localhost:5000/api/jobs/multi-status?status1=accepted&status2=inProgress&by=requested" } = config;
 
@@ -87,9 +88,17 @@ const expandRow = {
       <div>
         <Row>
         <Col md="8" style={{textAlign:'left'}}>
+          <p style={{fontWeight:"bold"}}>Job details:</p>
           <p>{ `Pick Up Address: ${row.pickUpAddress.street} ${row.pickUpAddress.unitNo}, Singapore ${row.pickUpAddress.postalNo}` }</p>
           <p>{ `Destination Address: ${row.destinationAddress.street} ${row.destinationAddress.unitNo}, Singapore ${row.destinationAddress.postalNo}` }</p>
           <p>{ `Comments: ${row.comments}` }</p>
+          <br></br>
+          <p style={{fontWeight:"bold"}}>Deliverer's Details:</p>
+          <p>{ `Name: ${row.delivererName}`}</p>
+          <p>{ `Contact:  ${row.delivererContactNo}`}</p>
+        </Col>
+        <Col style={{textAlign:'right'}}>
+          <ViewFeedbackUserLink userid={row.delivererID}/>
         </Col>
       </Row>
       </div>
@@ -138,7 +147,7 @@ const PostedOngoing = () => {
         return (
           <div>
             <BootstrapTable
-                keyField='_id'
+                keyField='_id.$oid'
                 data={ jobs }
                 columns={ columns }
                 expandRow={ expandRow }

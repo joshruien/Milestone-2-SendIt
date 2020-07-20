@@ -7,7 +7,7 @@ const ScheduleJob = () => {
         <div>
             <div className="container">
             <Breadcrumb>
-                <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+                <Breadcrumb.Item href="/">Dashboard</Breadcrumb.Item>
                 <Breadcrumb.Item active>Schedule a Job</Breadcrumb.Item>
             </Breadcrumb>
             <br></br>

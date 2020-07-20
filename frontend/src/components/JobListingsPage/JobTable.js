@@ -9,7 +9,8 @@ import axios from 'axios'
 import { useAuth0 } from "../../react-auth0-spa"
 import config from "../../auth_config.json"
 import AcceptCancelJob from "./AcceptCancelJob"
-
+import {Link} from "react-router-dom"
+import ViewFeedbackUserLink from "../ViewFeedbackUserPage/ViewFeedbackUserLink"
 const { apiOrigin = "http://localhost:5000/api/all-jobs/pending" } = config;
 
 const fragileCheck = {
@@ -108,7 +109,7 @@ const JobTable = () => {
     return (
         <div>
           <BootstrapTable
-              keyField='_id'
+              keyField='_id.$oid'
               data={ jobs }
               columns={ columns }
               expandRow={ expandRow }
@@ -135,8 +136,20 @@ const expandRow = {
           sender={row.senderID}
           jobid={row._id.$oid}
           />
+          <ViewFeedbackUserLink userid={row.senderID}/>
         </Col>
       </Row>
+    </div>
+  )
+}
+
+
+
+function ViewFeedbackUserLink2(props) {
+  const format_string = props.userid.split('|')[1]
+  return(
+    <div style={{paddingTop: '8px', paddingBottom: '1px'}}>
+      <Link to ={`/viewfeedback/${format_string}`}>View Sender's Feedback</Link>
     </div>
   )
 }

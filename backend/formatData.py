@@ -6,6 +6,7 @@ def format_form_data(inputDict):
         'senderFirstName' : inputDict['senderFirstName'],
         'senderLastName' : inputDict['senderLastName'],
         'senderContact' : inputDict['senderContact'],
+        'senderEmail' : inputDict["senderEmail"],
         'recipientFirstName' : inputDict['recipientFirstName'],
         'recipientLastName' : inputDict['recipientLastName'],
         'recipientContact' : inputDict['recipientContact'],
@@ -23,11 +24,25 @@ def format_form_data(inputDict):
             'street' : inputDict['destinationAddress'],
             'unitNo' : inputDict['destinationUnitNumber'],
             'postalNo' : inputDict['destinationPostal']
-        }
+        },
+        
+        'senderFeedback': None,
+        'senderRating': None,
+        'delivererName': None,
+        'delivererFeedback': None,
+        'delivererRating': None,
+        'delivererContactNo' : None
 
     }
 
     return outputDict
+
+def format_user_data(inputDict):
+    outputDict = {
+        'contactNo': inputDict['contactNo']
+    }
+    return outputDict
+
 
 
 

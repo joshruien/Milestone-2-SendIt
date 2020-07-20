@@ -8,6 +8,7 @@ import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.m
 import axios from 'axios'
 import { useAuth0 } from "../../react-auth0-spa"
 import config from "../../auth_config.json"
+import {Link} from "react-router-dom"
 
 const { apiOrigin = "http://localhost:5000/api/jobs/completed?by=delivered" } = config;
 
@@ -74,14 +75,39 @@ const expandRow = {
       <div>
         <Row>
         <Col md="8" style={{textAlign:'left'}}>
+          <p style={{fontWeight:"bold"}}>Job details:</p>
           <p>{ `Pick Up Address: ${row.pickUpAddress.street} ${row.pickUpAddress.unitNo}, Singapore ${row.pickUpAddress.postalNo}` }</p>
           <p>{ `Destination Address: ${row.destinationAddress.street} ${row.destinationAddress.unitNo}, Singapore ${row.destinationAddress.postalNo}` }</p>
           <p>{ `Comments: ${row.comments}` }</p>
         </Col>
-      </Row>
+        <Col style={{textAlign:'right'}}>
+          {row.delivererFeedback === null ? <LeaveFeedback jobid={row._id.$oid}/> : <p>Feedback Left</p>}
+        </Col>
+        </Row>
+        <br></br>
+        <Row>
+          <Col md="3" style={{textAlign:'left'}}>
+            <p style={{fontWeight:"bold"}}>Sender's Details:</p>
+            <p>{ `Name: ${row.senderFirstName} ${''} ${row.senderLastName}`}</p>
+            <p>{ `Contact:  ${row.senderContact}`}</p>
+          </Col>
+          <Col md="3" style={{textAlign:'left'}}>
+            <p style={{fontWeight:"bold"}}>Recipient's Details:</p>
+            <p>{ `Name: ${row.recipientFirstName} ${''} ${row.recipientLastName}`}</p>
+            <p>{ `Contact:  ${row.recipientContact}`}</p>
+          </Col>
+        </Row>
       </div>
     )
 };
+
+function LeaveFeedback(props) {
+    return(
+      <div>
+        <Link to ={`/submitfeedbackdel/${props.jobid}`}>Leave Feedback</Link>
+      </div>
+    )
+}
 
 const options = {
   sizePerPage: 5,

@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react"
 import BootstrapTable from 'react-bootstrap-table-next'
 import filterFactory, { textFilter, selectFilter } from 'react-bootstrap-table2-filter'
 import paginationFactory from 'react-bootstrap-table2-paginator'
-import {Button,Row,Col} from 'react-bootstrap'
+import { Button, Row, Col } from 'react-bootstrap'
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css'
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css'
 import axios from 'axios'
 import { useAuth0 } from "../../react-auth0-spa"
 import config from "../../auth_config.json"
+import {Link} from "react-router-dom"
+
 
 const { apiOrigin = "http://localhost:5000/api/jobs/completed?by=requested" } = config;
 
@@ -77,11 +79,26 @@ const expandRow = {
           <p>{ `Pick Up Address: ${row.pickUpAddress.street} ${row.pickUpAddress.unitNo}, Singapore ${row.pickUpAddress.postalNo}` }</p>
           <p>{ `Destination Address: ${row.destinationAddress.street} ${row.destinationAddress.unitNo}, Singapore ${row.destinationAddress.postalNo}` }</p>
           <p>{ `Comments: ${row.comments}` }</p>
+          <br></br>
+          <p>Deliverer's Details:</p>
+          <p>{ `Name: ${row.delivererName}`}</p>
+          <p>{ `Contact:  ${row.delivererContactNo}`}</p>
+        </Col>
+        <Col style={{textAlign:'right'}}>
+          {row.senderFeedback === null ? <LeaveFeedback jobid={row._id.$oid}/> : <p>Feedback left</p>}
         </Col>
       </Row>
       </div>
     )
 };
+
+function LeaveFeedback(props) {
+  return(
+    <div>
+      <Link to ={`/submitfeedbacksender/${props.jobid}`}>Leave Feedback</Link>
+    </div>
+  )
+}
 
 const options = {
   sizePerPage: 5,
@@ -124,7 +141,7 @@ const PostedHistory = () => {
         return (
           <div>
             <BootstrapTable
-                keyField='_id'
+                keyField='_id.$oid'
                 data={ jobs }
                 columns={ columns }
                 expandRow={ expandRow }

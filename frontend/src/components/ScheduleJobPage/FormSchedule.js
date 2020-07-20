@@ -1,21 +1,21 @@
 import React from 'react'
 import { Formik } from 'formik'
 import * as yup from 'yup'
-import {Form, Col, Button } from 'react-bootstrap'
+import { Form, Col, Button, Alert } from 'react-bootstrap'
 import axios from 'axios'
 import { useAuth0 } from "../../react-auth0-spa"
 
 const schema = yup.object({
     senderFirstName: yup.string().required('Required'),
     senderLastName: yup.string().required('Required'),
-    senderContact: yup.string().required('Required'),
+    senderContact: yup.string().length(8, 'Invalid number').required('Required'),
     pickUpAddress: yup.string().required('Required'),
     pickUpUnitNumber: yup.string().required('Required'),
     pickUpPostal: yup.string().required('Required'),
 
     recipientFirstName: yup.string().required('Required'),
     recipientLastName: yup.string().required('Required'),
-    recipientContact: yup.string().required('Required'),
+    recipientContact: yup.string().length(8, 'Invalid number').required('Required'),
     destinationAddress: yup.string().required('Required'),
     destinationUnitNumber: yup.string().required('Required'),
     destinationPostal: yup.string().required('Required'),
@@ -28,18 +28,34 @@ const schema = yup.object({
       .required('Required')
 })
 
+function SuccessAlert() {
+  return(
+    <Alert variant="success" style={{marginTop:"10px", textAlign:"left" }} >
+      <Alert.Heading>Your Job has been Scheduled!</Alert.Heading>
+      <p>
+        Your job has been successfully scheduled, a deliverer will accept your job soon.
+        You may view your job at the job listings page or the jobs posted page.
+      </p>
+      <hr />
+      Go to{' '}
+      <Alert.Link href="/joblistings">Job Listings</Alert.Link>, or go to{' '}
+      <Alert.Link href="/jobsposted">Jobs Posted</Alert.Link>
+    </Alert>
+  )
+}
+
 function FormSchedule() {
     return (
         <div className="container" style={{justifyContent:"center"}}>
-          <FormInformation />
+          <FormInformation/>
         </div>
     )
 }
   
 function FormInformation() {
-  const { getTokenSilently } = useAuth0();
+  const { user, getTokenSilently } = useAuth0();
   
-    return (
+  return (
       <Formik
         validationSchema={schema}
         initialValues={{
@@ -59,8 +75,9 @@ function FormInformation() {
           parcelSize: '',
           comments: ''
         }}
-        onSubmit={async (values, { setSubmitting, resetForm} ) => {
+        onSubmit={async (values, { setSubmitting, resetForm, setStatus } ) => {
           const token = await getTokenSilently();
+          values["senderEmail"] = user.email;
           await axios.post('http://localhost:5000/api/jobs', {
             values
           }, {
@@ -69,11 +86,12 @@ function FormInformation() {
             }
           })
           .then(response => {
-            console.log(response);  
-            resetForm();
+            console.log(response)
+            resetForm()  
+            setStatus({ success: true })
           })
           .catch(error => {
-            console.log(error);
+            console.log(error)
           })
           setSubmitting(false)
         }}
@@ -87,6 +105,7 @@ function FormInformation() {
           isValid,
           errors,
           isSubmitting,
+          status
         }) => (
           <Form onSubmit={handleSubmit}>
             <h3>Sender's Information</h3>
@@ -101,6 +120,7 @@ function FormInformation() {
                     value={values.senderFirstName}
                     onChange={handleChange}
                     isValid={touched.senderFirstName && !errors.senderFirstName}
+                    isInvalid={touched.senderFirstName && errors.senderFirstName}
                   />
                 </Form.Group>
                   
@@ -114,6 +134,7 @@ function FormInformation() {
                     value={values.senderLastName}
                     onChange={handleChange}
                     isValid={touched.senderLastName && !errors.senderLastName}
+                    isInvalid={touched.senderLastName && errors.senderLastName}
                   />
                 </Form.Group>
               </Form.Row>
@@ -128,7 +149,8 @@ function FormInformation() {
                     name="pickUpAddress"
                     value={values.pickUpAddress}
                     onChange={handleChange}
-                    isInvalid={!!errors.pickUpAddress}
+                    isValid={touched.pickUpAddress && !errors.pickUpAddress}
+                    isInvalid={touched.pickUpAddress && errors.pickUpAddress}
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.pickUpAddress}
@@ -146,7 +168,8 @@ function FormInformation() {
                     name="pickUpUnitNumber"
                     value={values.pickUpUnitNumber}
                     onChange={handleChange}
-                    isInvalid={!!errors.pickUpUnitNumber}
+                    isValid={touched.pickUpUnitNumber && !errors.pickUpUnitNumber}
+                    isInvalid={touched.pickUpUnitNumber && errors.pickUpUnitNumber}
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.pickUpUnitNumber}
@@ -165,7 +188,8 @@ function FormInformation() {
                     name="pickUpPostal"
                     value={values.pickUpPostal}
                     onChange={handleChange}
-                    isInvalid={!!errors.pickUpPostal}
+                    isValid={touched.pickUpPostal && !errors.pickUpPostal}
+                    isInvalid={touched.pickUpPostal && errors.pickUpPostal}
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.pickUpPostal}
@@ -183,7 +207,8 @@ function FormInformation() {
                     placeholder="Contact number"
                     value={values.senderContact}
                     onChange={handleChange}
-                    isInvalid={!!errors.senderContact}
+                    isValid={touched.senderContact && !errors.senderContact}
+                    isInvalid={touched.senderContact && errors.senderContact}
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.senderContact}
@@ -204,6 +229,7 @@ function FormInformation() {
                     value={values.recipientFirstName}
                     onChange={handleChange}
                     isValid={touched.recipientFirstName && !errors.recipientFirstName}
+                    isInvalid={touched.recipientFirstName && errors.recipientFirstName}
                   />
                 </Form.Group>
 
@@ -217,6 +243,7 @@ function FormInformation() {
                     value={values.recipientLastName}
                     onChange={handleChange}
                     isValid={touched.recipientLastName && !errors.recipientLastName}
+                    isInvalid={touched.recipientLastName && errors.recipientLastName}
                   />
                 </Form.Group>
               </Form.Row>
@@ -231,7 +258,8 @@ function FormInformation() {
                     name="destinationAddress"
                     value={values.destinationAddress}
                     onChange={handleChange}
-                    isInvalid={!!errors.destinationAddress}
+                    isValid={touched.destinationAddress && !errors.destinationAddress}
+                    isInvalid={touched.destinationAddress && errors.destinationAddress}
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.destinationAddress}
@@ -249,7 +277,8 @@ function FormInformation() {
                     name="destinationUnitNumber"
                     value={values.destinationUnitNumber}
                     onChange={handleChange}
-                    isInvalid={!!errors.destinationUnitNumber}
+                    isValid={touched.destinationUnitNumber && !errors.destinationUnitNumber}
+                    isInvalid={touched.destinationUnitNumber && errors.destinationUnitNumber}
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.destinationUnitNumber}
@@ -268,7 +297,8 @@ function FormInformation() {
                     name="destinationPostal"
                     value={values.destinationPostal}
                     onChange={handleChange}
-                    isInvalid={!!errors.destinationPostal}
+                    isValid={touched.destinationPostal && !errors.destinationPostal}
+                    isInvalid={touched.destinationPostal && errors.destinationPostal}
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.destinationPostal}
@@ -286,7 +316,8 @@ function FormInformation() {
                     placeholder="Contact number"
                     value={values.recipientContact}
                     onChange={handleChange}
-                    isInvalid={!!errors.recipientContact}
+                    isValid={touched.recipientContact && !errors.recipientContact}
+                    isInvalid={touched.recipientContact && errors.recipientContact}
                   />              
                   <Form.Control.Feedback type="invalid">
                     {errors.recipientContact}
@@ -294,7 +325,7 @@ function FormInformation() {
                 </Form.Group>
               </Form.Row>
 
-              <h4>Additional Details</h4>
+              <h3>Additional Details</h3>
               <Form.Row>
                 <Form.Group controlId="parcelSize" as={Col} md={{ offset:2, span:3}}>
                   <Form.Label>Select parcel size</Form.Label>
@@ -304,7 +335,8 @@ function FormInformation() {
                       name="parcelSize"
                       value={values.parcelSize}
                       onChange={handleChange} 
-                      isInvalid={!!errors.parcelSize}
+                      isValid={touched.parcelSize && !errors.parcelSize}
+                      isInvalid={touched.parcelSize && errors.parcelSize}
                       custom>
                       <option value="" label="Select a size" />
                       <option value="Small" label="Small" />
@@ -347,6 +379,8 @@ function FormInformation() {
             </Form.Row>
 
             <Button disabled={isSubmitting} type="submit">Submit</Button>
+            {status ? <SuccessAlert/> : <div></div>}
+            
         </Form> 
         )}
       </Formik>

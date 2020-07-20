@@ -88,6 +88,7 @@ const expandRow = {
       <div>
         <Row>
           <Col md="8" style={{textAlign:'left'}}>
+            <p style={{fontWeight:"bold"}}>Job details:</p>
             <p>{ `Pick Up Address: ${row.pickUpAddress.street} ${row.pickUpAddress.unitNo}, Singapore ${row.pickUpAddress.postalNo}` }</p>
             <p>{ `Destination Address: ${row.destinationAddress.street} ${row.destinationAddress.unitNo}, Singapore ${row.destinationAddress.postalNo}` }</p>
             <p>{ `Comments: ${row.comments}` }</p>
@@ -98,6 +99,19 @@ const expandRow = {
           jobstatus={row.status}
           />
         </Col>
+        </Row>
+        <br></br>
+        <Row>
+          <Col md="3" style={{textAlign:'left'}}>
+            <p style={{fontWeight:"bold"}}>Sender's Details:</p>
+            <p>{ `Name: ${row.senderFirstName} ${''} ${row.senderLastName}`}</p>
+            <p>{ `Contact:  ${row.senderContact}`}</p>
+          </Col>
+          <Col md="3" style={{textAlign:'left'}}>
+            <p style={{fontWeight:"bold"}}>Recipient's Details:</p>
+            <p>{ `Name: ${row.recipientFirstName} ${''} ${row.recipientLastName}`}</p>
+            <p>{ `Contact:  ${row.recipientContact}`}</p>
+          </Col>
         </Row>
       </div>
     )

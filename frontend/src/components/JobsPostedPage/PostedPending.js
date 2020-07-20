@@ -8,6 +8,7 @@ import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.m
 import axios from 'axios'
 import { useAuth0 } from '../../react-auth0-spa'
 import config from '../../auth_config.json'
+import AcceptCancelJob from '../JobListingsPage/AcceptCancelJob'
 
 const { apiOrigin = "http://localhost:5000/api/jobs/pending?by=requested" } = config;
 
@@ -79,7 +80,10 @@ const expandRow = {
             <p>{ `Comments: ${row.comments}` }</p>
           </Col>
           <Col style={{textAlign:'right'}}>
-            <Button variant='danger'>Cancel Job</Button>
+            <AcceptCancelJob
+            sender={row.senderID}
+            jobid={row._id.$oid}
+            />
           </Col>
         </Row>
       </div>
@@ -127,7 +131,7 @@ function PostedPending() {
         return (
           <div>
             <BootstrapTable
-                keyField='_id'
+                keyField='_id.$oid'
                 data={ jobs }
                 columns={ columns }
                 expandRow={ expandRow }

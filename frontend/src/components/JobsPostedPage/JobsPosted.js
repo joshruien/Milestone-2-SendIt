@@ -1,5 +1,5 @@
 import React from 'react'
-import { Tabs, Tab } from 'react-bootstrap'
+import { Tabs, Tab, Breadcrumb } from 'react-bootstrap'
 import PostedPending from './PostedPending'
 import PostedOngoing from './PostedOngoing'
 import PostedHistory from './PostedHistory'
@@ -7,6 +7,10 @@ import PostedHistory from './PostedHistory'
 const JobsPosted = () => {
     return (
         <div className="container">
+            <Breadcrumb>
+                <Breadcrumb.Item href="/">Dashboard</Breadcrumb.Item>
+                <Breadcrumb.Item active>Jobs Posted</Breadcrumb.Item>
+            </Breadcrumb>
             <h1>These are the jobs you posted</h1>
             <p>Pending - job is pending acceptance</p>
             <p>Ongoing - job has been accepted</p>

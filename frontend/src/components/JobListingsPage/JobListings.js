@@ -4,7 +4,7 @@ import JobTable from './JobTable'
 
 const JobListings = () => {
     return (
-        <div>
+        <div className="container">
             <Breadcrumb>
                 <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
                 <Breadcrumb.Item active>Job Listings</Breadcrumb.Item>

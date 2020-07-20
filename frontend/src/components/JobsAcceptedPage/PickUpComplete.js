@@ -4,10 +4,14 @@ import { useAuth0 } from "../../react-auth0-spa"
 import axios from 'axios'
 import config from '../../auth_config.json'
 
-const PickUpComplete = ({ jobid, jobstatus}) => {
+const PickUpComplete = ({ jobid, jobstatus }) => {
     const { getTokenSilently } = useAuth0();
     const currentjobid = jobid
     const currentjobstatus = jobstatus
+
+    function refreshPage() {
+        window.location.reload(false);
+    }
 
     function PickUp() {
         const deliveryJobId = currentjobid
@@ -28,7 +32,8 @@ const PickUpComplete = ({ jobid, jobstatus}) => {
                 console.log(error)
             });
         }
-        return callApi();  
+        callApi();  
+        return refreshPage();
     }
 
     function MarkComplete() {
@@ -50,7 +55,8 @@ const PickUpComplete = ({ jobid, jobstatus}) => {
                 console.log(error)
             });
         }
-        return callApi();  
+        callApi();  
+        return refreshPage();
     }
 
 
